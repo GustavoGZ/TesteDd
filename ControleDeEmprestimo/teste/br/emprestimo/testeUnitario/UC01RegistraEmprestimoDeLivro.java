@@ -6,6 +6,7 @@ import org.junit.BeforeClass;
 import org.junit.Test;
 
 import br.emprestimo.modelo.Emprestimo;
+import br.emprestimo.modelo.EmprestimoDAO;
 import br.emprestimo.modelo.Livro;
 import br.emprestimo.modelo.Usuario;
 import br.emprestimo.servico.ServicoEmprestimo;
@@ -101,5 +102,34 @@ public class UC01RegistraEmprestimoDeLivro {
 		assertTrue(ehDomingo);
 	}
 	
-	
+	@Test
+	public void CT10QuandoInserirUmEmprestimoRetornaTrue(){
+		//cenário de teste (setup do ambiente q eu vou testar)
+		Emprestimo umEmprestimo= new Emprestimo();
+		Usuario umUsuario= ObtemUsuario.comDadosValidos();
+		Livro umLivro= ObtemLivro.comDadosValidos();
+		ServicoEmprestimo servico= new ServicoEmprestimo();
+		umEmprestimo = servico.empresta(umLivro, umUsuario);
+		EmprestimoDAO emprestimoDAO = new EmprestimoDAO();
+		//ação(inserir objeto)
+		boolean resultadoEsperado=emprestimoDAO.adiciona(umEmprestimo);
+		//verificação
+		assertTrue(resultadoEsperado);
+	}
+	@Test
+	public void CT11ConsultaRegistroComSucesso(){
+		//cenário
+		Emprestimo umEmprestimo= new Emprestimo();
+		Usuario umUsuario= ObtemUsuario.comDadosValidos();
+		Livro umLivro= ObtemLivro.comDadosValidos();
+		ServicoEmprestimo servico= new ServicoEmprestimo();
+		umEmprestimo = servico.empresta(umLivro, umUsuario);
+		EmprestimoDAO emprestimoDAO = new EmprestimoDAO();
+		emprestimoDAO.adiciona(umEmprestimo);
+		//ação
+		Emprestimo resultadoObtido= emprestimoDAO.consulta(umEmprestimo.getUsuario().getRa());
+		//verificação
+		assertFalse(resultadoObtido.equals(umEmprestimo));
+		
+	}
 }
